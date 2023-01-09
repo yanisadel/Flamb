@@ -26,6 +26,22 @@ def test_gradients():
     assert x.grad == 75, "Gradient should be 75"
 
     x = Variable(2)
+    y = 1 / x
+    y.backward()
+    assert x.grad == -1 / 4, "Gradient should be -1/4"
+
+    x = Variable(2)
+    y = (x ** 2 - 1) ** 2
+    y.backward()
+    assert x.grad == 24, "Gradient should be 24"
+
+    x = Variable(2)
+    y = Variable(5)
+    z = y / x ** 2
+    z.backward()
+    assert x.grad == -10 / 8, "Gradient should be -10/8"
+
+    x = Variable(2)
     y = Variable(5)
     z = 1 / x + (x ** 2 - 1) ** 2 + y / x ** 2
     z.backward()
@@ -60,6 +76,45 @@ def test_gradients():
     assert x.grad == (
         1 - math.tanh(5) ** 2
     ), "Gradient of tanh(5) should be 1 - tanh(5)**2"
+
+    value = 5
+    x = Variable(value, requires_grad=True)
+    y = (x ** 2) * F.cos(x)
+    y.backward()
+    assert x.grad == (
+        (2 * value * F.cos(value) - (value ** 2) * F.sin(value))
+    ), "Gradient should be (2x*cos(x) - x**2 * sin(x))"
+
+    value = 5
+    x = Variable(value, requires_grad=True)
+    y = F.exp(x ** 2) * F.tanh(x)
+    y.backward()
+    assert abs(
+        x.grad
+        - (
+            2 * value ** 1 * F.exp(value ** 2) * F.tanh(value)
+            + F.exp(value ** 2) * (1 - F.tanh(value) ** 2)
+        )
+        < 1e-3
+    ), "Gradient should be 3 * x**2 * exp(x**3) * tanh(x) + exp(x**3)*(1 - tanh(x)**2)"
+    # < 1e-3 is because of the approximation errors
+
+    value = 5
+    x = Variable(value, requires_grad=True)
+    y = (x ** 2) * F.cos(x) - F.exp(x ** 2) * F.tanh(x)
+    y.backward()
+    assert abs(
+        x.grad
+        - (
+            (2 * value * F.cos(value) - (value ** 2) * F.sin(value))
+            - (
+                2 * value ** 1 * F.exp(value ** 2) * F.tanh(value)
+                + F.exp(value ** 2) * (1 - F.tanh(value) ** 2)
+            )
+        )
+        < 1e-3
+    ), "Gradient should be ( (2x*cos(x) - x**2 * sin(x)) - ( 3 * x**2 * exp(x**3) * tanh(x) + exp(x**3)*(1 - tanh(x)**2) ) )"
+    # < 1e-3 is because of the approximation errors
 
 
 if __name__ == "__main__":

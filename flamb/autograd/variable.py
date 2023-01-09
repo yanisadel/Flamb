@@ -115,7 +115,7 @@ class Variable:
         else:
             raise Exception(f"Cannot divide a {type(var)} by a {self.__class__}")
 
-        last_operation = DivisionOperator(self, var)
+        last_operation = DivisionOperator(var, self)
         return Variable(
             new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
@@ -136,7 +136,7 @@ class Variable:
                 f"Cannot calculate a {self.__class__} to the power of a {type(power)}"
             )
 
-        last_operation = SumOperator(self, power)
+        last_operation = PowerOperator(self, power)
         return Variable(
             new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
