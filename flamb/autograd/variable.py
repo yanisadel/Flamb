@@ -44,17 +44,9 @@ class Variable:
         else:
             raise Exception(f"Cannot sum a {self.__class__} and a {type(var)}")
 
-        dtype = type(new_value)
         last_operation = SumOperator(self, var)
-
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def __radd__(self, var):
@@ -85,17 +77,9 @@ class Variable:
         else:
             raise Exception(f"Cannot multiply a {self.__class__} and a {type(var)}")
 
-        dtype = type(new_value)
         last_operation = ProductOperator(self, var)
-
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def __rmul__(self, var):
@@ -115,17 +99,9 @@ class Variable:
         else:
             raise Exception(f"Cannot divide a {self.__class__} by a {type(var)}")
 
-        dtype = type(new_value)
         last_operation = DivisionOperator(self, var)
-
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def __rtruediv__(self, var):
@@ -139,17 +115,9 @@ class Variable:
         else:
             raise Exception(f"Cannot divide a {type(var)} by a {self.__class__}")
 
-        dtype = type(new_value)
         last_operation = DivisionOperator(self, var)
-
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def __floordiv__(self, var):
@@ -168,17 +136,9 @@ class Variable:
                 f"Cannot calculate a {self.__class__} to the power of a {type(power)}"
             )
 
-        dtype = type(new_value)
         last_operation = SumOperator(self, power)
-
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def __eq__(self, var):
@@ -214,81 +174,46 @@ class Variable:
     def exp(self):
         new_value = math.exp(self.value)
         requires_grad = self.requires_grad
-        dtype = type(new_value)
         last_operation = ExpOperator(self)
 
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def cos(self):
         new_value = math.cos(self.value)
         requires_grad = self.requires_grad
-        dtype = type(new_value)
         last_operation = CosOperator(self)
 
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def sin(self):
         new_value = math.sin(self.value)
         requires_grad = self.requires_grad
-        dtype = type(new_value)
         last_operation = SinOperator(self)
 
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def tan(self):
         new_value = math.tan(self.value)
         requires_grad = self.requires_grad
-        dtype = type(new_value)
         last_operation = TanOperator(self)
 
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def tanh(self):
         new_value = math.tanh(self.value)
         requires_grad = self.requires_grad
-        dtype = type(new_value)
         last_operation = TanhOperator(self)
 
-        if not flamb.environ["grad_enabled"]:
-            requires_grad = False
-
         return Variable(
-            new_value,
-            dtype=dtype,
-            requires_grad=requires_grad,
-            last_operation=last_operation,
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
         )
 
     def backward(self, accumulated_grad=None):
