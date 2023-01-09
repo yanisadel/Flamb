@@ -14,7 +14,7 @@ class no_grad:
         pass
 
     def __enter__(self):
-        flamb.environ["grad_enabled"] = False
+        flamb.environ["is_grad_enabled"] = False
 
     def __exit__(self, type, value, traceback):
-        flamb.environ["grad_enabled"] = True
+        flamb.environ["is_grad_enabled"] = True

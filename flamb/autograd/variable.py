@@ -24,7 +24,7 @@ class Variable:
         else:
             self.dtype = type(self.value)
         self.requires_grad = requires_grad
-        if not flamb.environ["grad_enabled"]:
+        if not flamb.environ["is_grad_enabled"]:
             self.requires_grad = False
 
         self.grad = 0
@@ -226,7 +226,7 @@ class Variable:
             accumulated_grad (float) : default=None. The gradient of the current variable that has been computed.
                                        It allows to use chain rule.
         """
-        if flamb.environ["grad_enabled"]:
+        if flamb.environ["is_grad_enabled"]:
             if accumulated_grad == None:
                 accumulated_grad = 1
 
