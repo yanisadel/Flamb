@@ -1,6 +1,7 @@
 import flamb
 from flamb.autograd.operators import *
 from flamb.utils import *
+import math
 
 class Variable:
     def __init__(self, value, dtype=None, requires_grad=True, last_operation=None):
@@ -25,9 +26,11 @@ class Variable:
         if isinstance(new_variable, Variable):
             new_value += new_variable.value
             requires_grad = requires_grad or new_variable.requires_grad
-        else:
+        elif isinstance(new_variable, (int, float)):
             new_value += new_variable
-        
+        else:
+            raise Exception(f"Cannot handle sum with {type(new_variable)}")
+
         dtype = type(new_value)
 
         if flamb.environ['compute_grad']:
@@ -63,9 +66,11 @@ class Variable:
         if isinstance(new_variable, Variable):
             new_value *= new_variable.value
             requires_grad = requires_grad or new_variable.requires_grad
-        else:
+        elif isinstance(new_variable, (int, float)):
             new_value *= new_variable
-        
+        else:
+            raise Exception(f"Cannot handle product with {type(new_variable)}")
+
         dtype = type(new_value)
 
         if flamb.environ['compute_grad']:
@@ -88,9 +93,11 @@ class Variable:
         if isinstance(new_variable, Variable):
             new_value /= new_variable.value
             requires_grad = requires_grad or new_variable.requires_grad
-        else:
+        elif isinstance(new_variable, (int, float)):
             new_value /= new_variable
-        
+        else:
+            raise Exception(f"Cannot handle division with {type(new_variable)}")
+
         dtype = type(new_value)
 
         if flamb.environ['compute_grad']:
@@ -105,9 +112,11 @@ class Variable:
         if isinstance(new_variable, Variable):
             new_value = new_variable.value / self.value
             requires_grad = requires_grad or new_variable.requires_grad
-        else:
+        elif isinstance(new_variable, (int, float)):
             new_value = new_variable / self.value
-        
+        else:
+            raise Exception(f"Cannot handle division with {type(new_variable)}")
+
         dtype = type(new_value)
 
         if flamb.environ['compute_grad']:
@@ -127,9 +136,10 @@ class Variable:
         if isinstance(power, Variable):
             new_value = new_value**(power.value)
             requires_grad = requires_grad or power.requires_grad
-        else:
+        elif isinstance(power, (int, float)):
             new_value = new_value**power
-        
+        else:
+            raise Exception(f"Cannot handle power with {type(power)} exposant")
         dtype = type(new_value)
 
         if flamb.environ['compute_grad']:
@@ -137,7 +147,6 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
-
 
 
     def __eq__(self, var):
@@ -171,6 +180,67 @@ class Variable:
         var = convert_variable(var)
         return self.value <= var
 
+
+    def exp(self):
+        new_value = math.exp(self.value)
+        requires_grad = self.requires_grad
+        dtype = type(new_value)
+
+        if flamb.environ['compute_grad']:
+            last_operation = ExpOperator(self)
+            return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
+        else:
+            self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+
+
+    def cos(self):
+        new_value = math.cos(self.value)
+        requires_grad = self.requires_grad
+        dtype = type(new_value)
+
+        if flamb.environ['compute_grad']:
+            last_operation = CosOperator(self)
+            return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
+        else:
+            self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+
+
+    def sin(self):
+        new_value = math.sin(self.value)
+        requires_grad = self.requires_grad
+        dtype = type(new_value)
+
+        if flamb.environ['compute_grad']:
+            last_operation = SinOperator(self)
+            return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
+        else:
+            self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+
+
+    def tan(self):
+        new_value = math.tan(self.value)
+        requires_grad = self.requires_grad
+        dtype = type(new_value)
+
+        if flamb.environ['compute_grad']:
+            last_operation = TanOperator(self)
+            return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
+        else:
+            self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+    
+    def tanh(self):
+        new_value = math.tanh(self.value)
+        requires_grad = self.requires_grad
+        dtype = type(new_value)
+
+        if flamb.environ['compute_grad']:
+            last_operation = TanhOperator(self)
+            return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
+        else:
+            self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+
+
+    
 
     def backward(self, accumulated_grad=None):
         if flamb.environ['compute_grad']:

@@ -1,4 +1,5 @@
 from flamb.utils import *
+import math
 
 class BaseOperator:
     """
@@ -20,17 +21,11 @@ class BaseOperator:
 
 
 class SumOperator(BaseOperator):
-    def __init__(self, *variables):
-        self.variables = list(variables)
-    
     def gradient(self):
         return [1 for _ in range(len(self.variables))]
         
 
 class ProductOperator(BaseOperator):
-    def __init__(self, *variables):
-        self.variables = variables
-
     def gradient(self):
         # Convert variables to int/float values
         variables = convert_variable_list(self.variables)
@@ -63,9 +58,6 @@ class ProductOperator(BaseOperator):
 
 
 class DivisionOperator(BaseOperator):
-    def __init__(self, *variables):
-        self.variables = variables
-
     def gradient(self):
         # Convert variables to int/float values
         try:
@@ -89,3 +81,30 @@ class PowerOperator(BaseOperator):
         variable = convert_variable(self.variables[0])
         power = convert_variable(self.power)
         return [power*(variable**(power-1))]
+
+
+class ExpOperator(BaseOperator):
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        return [math.exp(variable)]
+
+class CosOperator(BaseOperator):
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        return [-math.sin(variable)]
+
+class SinOperator(BaseOperator):
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        return [math.cos(variable)]
+
+class TanOperator(BaseOperator):
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        return [1 + math.tan(variable)**2]
+
+class TanhOperator(BaseOperator):
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        return [1 - math.tanh(variable)**2]
+        
