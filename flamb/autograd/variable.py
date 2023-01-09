@@ -18,7 +18,7 @@ class Variable:
         self.last_operation = last_operation
 
     def __repr__(self):
-        return f"Variable({self.value}, dtype={self.dtype.__name__}, requires_grad={self.requires_grad})"
+        return f"{self.value}"
 
     def __add__(self, new_variable):
         new_value = self.value
