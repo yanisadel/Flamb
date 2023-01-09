@@ -1,5 +1,5 @@
 from flamb.autograd import Variable, no_grad, functional
-from flamb.tensor import *
+from flamb.tensor import Tensor
 
 environ = {'compute_grad': True}
 
