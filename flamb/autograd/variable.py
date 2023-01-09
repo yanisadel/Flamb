@@ -38,7 +38,8 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
-
+            return self
+            
     def __radd__(self, new_variable):
         return self + new_variable
 
@@ -78,6 +79,7 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+            return self
 
     def __rmul__(self, new_variable):
         return self*new_variable
@@ -105,6 +107,7 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
+            return self
 
     def __rtruediv__(self, new_variable):
         new_value = 0
@@ -124,7 +127,7 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
-
+            return self
 
     def __floordiv__(self, new_variable):
         raise Exception(r"The operation // is not implemented yet")
@@ -147,7 +150,7 @@ class Variable:
             return Variable(new_value, dtype=dtype, requires_grad=requires_grad, last_operation=last_operation)
         else:
             self.__init__(new_value, dtype=dtype, requires_grad=False, last_operation=None)
-
+            return self
 
     def __eq__(self, var):
         """="""
