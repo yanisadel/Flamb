@@ -1,56 +1,29 @@
 import flamb
+import numpy as np
 from copy import deepcopy
+
 
 class Tensor:
     """
     Does not arrays with uncorrect shape yet
     """
+
     def __init__(self, l, dtype=None, requires_grad=False):
-        self.l = deepcopy(list(l))
+        self.l = Tensor._initialize_tensor_variables(
+            l, requires_grad=requires_grad, dtype=dtype
+        )
         self.dtype = dtype
-        self.shape = Tensor._get_shape(self.l)
-        Tensor._initialize_tensor_variables(self, requires_grad=requires_grad, dtype=dtype)
-        
-    @staticmethod
-    def _get_shape(l):
-        shape = []
-        done = False
-        current_list = deepcopy(l)
-        while not done:
-            try:
-                shape.append(len(current_list))
-                current_list = current_list[0]
-            except:
-                done = True
-        
-        return tuple(shape)
+        self.shape = self.l.shape
 
-    """
-    Version récursive
     @staticmethod
-    def _initialize_tensor_variables(l, requires_grad=False, dtype=None):
-        n = len(l)
-        if isinstance(l[0], list):
-            for i in range(n):
-                Tensor._initialize_tensor_variables(l[i], requires_grad=requires_grad, dtype=dtype)
-
-        else:
-            for i in range(n):
-                l[i] = flamb.Variable(l[i], dtype=dtype, requires_grad=requires_grad)
-    """
-    
-    def _initialize_tensor_variables(self, requires_grad=False, dtype=None):
-        # Récupérer la shape de l'array et initialiser la liste des indices à 0
-        shape = self.shape
+    def _browse_tensor_indicies(shape):
         index = [0] * len(shape)
-        
         # Indicateur pour savoir quand arrêter de parcourir l'array
         done = False
-        
         # Tant que nous n'avons pas fini de parcourir l'array
         while not done:
             # Afficher l'élément courant
-            self[tuple(index)] = flamb.Variable(self[tuple(index)], dtype=dtype, requires_grad=requires_grad)
+            yield tuple(index)
 
             # Passer à l'élément suivant
             index[0] += 1
@@ -64,29 +37,69 @@ class Tensor:
                     else:
                         index[i + 1] += 1
 
+    @staticmethod
+    def _initialize_tensor_variables(l, requires_grad=False, dtype=None):
+        # Récupérer la shape de l'array et initialiser la liste des indices à 0
+        l = np.array(l)
+        shape = l.shape
+        tensor = np.empty(shape, dtype=object)
+
+        for index in Tensor._browse_tensor_indicies(shape):
+            # Afficher l'élément courant
+            tensor[tuple(index)] = flamb.Variable(
+                l[tuple(index)], dtype=dtype, requires_grad=requires_grad
+            )
+
+        return tensor
 
     def __getitem__(self, index):
-        if isinstance(index, int):
-            return self.l[index]
-        elif isinstance(index, (tuple, list)):
-            res = self.l
-            for elt in index:
-                res = res[elt]
-            return res
+        return self.l[index]
 
     def __setitem__(self, index, value):
-        if isinstance(index, int):
-            self.l[index] = value
-        elif isinstance(index, (tuple, list)):
-            n = len(index)
-            res = self.l
-            for i in range(n-1):
-                res = res[index[i]]
-            res[index[-1]] = value
-        else:
-            raise Exception("The index must be an integer, a tuple or a list")
+        self.l[index] = value
 
+    def __add__(self, new_variable):
+        return Tensor(self.l + new_variable)
+
+    def __radd__(self, new_variable):
+        return self + new_variable
+
+    def __iadd__(self, new_variable):
+        return self + new_variable
+
+    def __sub__(self, new_variable):
+        return Tensor(self.l - new_variable)
+
+    def __rsub__(self, new_variable):
+        return Tensor(new_variable - self.l)
+
+    def __isub__(self, new_variable):
+        return self - new_variable
+
+    def __mul__(self, new_variable):
+        return Tensor(self.l * new_variable)
+
+    def __rmul__(self, new_variable):
+        return self * new_variable
+
+    def __imul__(self, new_variable):
+        return self * new_variable
+
+    def __truediv__(self, new_variable):
+        return Tensor(self.l / new_variable)
+
+    def __rtruediv__(self, new_variable):
+        return Tensor(new_variable / self.l)
+
+    def __itruediv__(self, new_variable):
+        return self / new_variable
+
+    def sum(self):
+        return self.l.sum()
+
+    def reshape(self, shape):
+        self.l.reshape(shape)
 
     def __repr__(self):
-        return f"Tensor({self.l}, dtype={self.dtype})"
+        return f"{self.l}"
 
