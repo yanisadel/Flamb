@@ -1,14 +1,16 @@
 from flamb.utils import *
 import math
 
+
 class BaseOperator:
     """
-    Class defining an operation, allowing to remember of some operations (sum, product...)
-    and to calculate gradients of the operation with respect to the parameters
+    Class defining an operator, allowing to remember of some operations (sum, product...) made on variables,
+    and to calculate gradients of the operator with respect to the parameters
     """
+
     def __init__(self, *variables):
         self.variables = list(variables)
-    
+
     def gradient(self):
         """
         Returns the gradient with respect to the parameters
@@ -19,13 +21,16 @@ class BaseOperator:
         return self.variables
 
 
-
 class SumOperator(BaseOperator):
+    """Sum of variables"""
+
     def gradient(self):
         return [1 for _ in range(len(self.variables))]
-        
+
 
 class ProductOperator(BaseOperator):
+    """Product of variables"""
+
     def gradient(self):
         # Convert variables to int/float values
         variables = convert_variable_list(self.variables)
@@ -33,7 +38,7 @@ class ProductOperator(BaseOperator):
         grads = []
         n = len(variables)
 
-        if 0 in variables: # revoir si ça fonctionne bien vu que ce sont des Variable
+        if 0 in variables:
             for i in range(n):
                 # All values different than 0 have gradient equal to 0
                 if variables[i] == 0:
@@ -49,15 +54,16 @@ class ProductOperator(BaseOperator):
             product = 1
             for value in variables:
                 product *= value
-            
+
             for value in variables:
-                grads.append(product/value)
+                grads.append(product / value)
 
         return grads
 
 
-
 class DivisionOperator(BaseOperator):
+    """Division of two variables"""
+
     def gradient(self):
         # Convert variables to int/float values
         try:
@@ -68,11 +74,13 @@ class DivisionOperator(BaseOperator):
         variables = convert_variable_list(self.variables)
         value1, value2 = variables
 
-        grads = [1/value2, -value1/(value2**2)]
+        grads = [1 / value2, -value1 / (value2 ** 2)]
         return grads
 
 
 class PowerOperator(BaseOperator):
+    """A variable power another variable"""
+
     def __init__(self, variable, power):
         self.power = power
         self.variables = [variable]
@@ -80,31 +88,45 @@ class PowerOperator(BaseOperator):
     def gradient(self):
         variable = convert_variable(self.variables[0])
         power = convert_variable(self.power)
-        return [power*(variable**(power-1))]
+        return [power * (variable ** (power - 1))]
 
 
 class ExpOperator(BaseOperator):
+    """Exponential of a variable"""
+
     def gradient(self):
         variable = convert_variable(self.variables[0])
         return [math.exp(variable)]
 
+
 class CosOperator(BaseOperator):
+    """Cos of a variable"""
+
     def gradient(self):
         variable = convert_variable(self.variables[0])
         return [-math.sin(variable)]
 
+
 class SinOperator(BaseOperator):
+    """Sin of a variable"""
+
     def gradient(self):
         variable = convert_variable(self.variables[0])
         return [math.cos(variable)]
 
+
 class TanOperator(BaseOperator):
+    """Tan of a variable"""
+
     def gradient(self):
         variable = convert_variable(self.variables[0])
-        return [1 + math.tan(variable)**2]
+        return [1 + math.tan(variable) ** 2]
+
 
 class TanhOperator(BaseOperator):
+    """Tanh of a variable"""
+
     def gradient(self):
         variable = convert_variable(self.variables[0])
-        return [1 - math.tanh(variable)**2]
-        
+        return [1 - math.tanh(variable) ** 2]
+
