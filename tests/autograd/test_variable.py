@@ -7,6 +7,31 @@ import math
 def test_values():
     value = 5.5
     x = Variable(value, requires_grad=False)
+    assert x ** 2 == value ** 2, f"Value is not correct for {value}**2"
+    assert (3 * x - 1) * (-1 * x + 2), f"Value is not correct for (3x - 1)(-x + 2)"
+    assert (2 * x) / (x - 1), f"Value is not correct for (2x)/(x-1)"
+
+    x = Variable(value)
+    x += 3
+    assert x == value + 3, "__iadd__ does not work for integers"
+
+    x = Variable(value)
+    x += x
+    assert x == 2 * value, "__iadd__ does not work for variables"
+
+    x = Variable(value)
+    x -= 3
+    assert x == value - 3, "__isub__ does not work"
+
+    x = Variable(value)
+    x *= 3
+    assert x == value * 3, "__imul__ does not work"
+
+    x = Variable(value)
+    x /= 3
+    assert x == value / 3, "__itruediv__ does not work"
+
+    x = Variable(value)
     assert F.exp(x) == math.exp(value), f"Exp value is not correct for {value}"
     assert F.cos(x) == math.cos(value), f"Cos value is not correct for {value}"
     assert F.sin(x) == math.sin(value), f"Sin value is not correct for {value}"
