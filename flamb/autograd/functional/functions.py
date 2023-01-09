@@ -1,5 +1,10 @@
+"""
+This file contains mathematical functions that work on Variable, or classical types like int and float
+"""
+
 import flamb
 import math
+
 
 def exp(x):
     if isinstance(x, flamb.Variable):
@@ -7,11 +12,13 @@ def exp(x):
     else:
         return math.exp(x)
 
+
 def cos(x):
     if isinstance(x, flamb.Variable):
         return x.cos()
     else:
         return math.cos(x)
+
 
 def sin(x):
     if isinstance(x, flamb.Variable):
