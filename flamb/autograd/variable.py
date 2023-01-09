@@ -217,12 +217,20 @@ class Variable:
         )
 
     def backward(self, accumulated_grad=None):
+        """
+        The current variable was obtained with some variables.
+        This function computes the gradient of the current variable with respect to the other variables
+
+        Parameters
+        ----------
+            accumulated_grad (float) : default=None. The gradient of the current variable that has been computed.
+                                       It allows to use chain rule.
+        """
         if flamb.environ["grad_enabled"]:
             if accumulated_grad == None:
                 accumulated_grad = 1
 
             self.grad += accumulated_grad
-            # revoir au dessus
 
             last_operation = self.last_operation
             if last_operation != None:
@@ -234,4 +242,7 @@ class Variable:
                         var.backward(accumulated_grad * grad)
 
         else:
-            raise Exception("Cannot compute gradient in flamb.no_grad context")
+            raise Exception(
+                "Cannot compute gradient in because grad is disabled (you're probably in a flamb.no_grad context)"
+            )
+
