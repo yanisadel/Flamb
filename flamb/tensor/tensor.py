@@ -1,105 +1,154 @@
-import flamb
-import numpy as np
 from copy import deepcopy
-
 
 class Tensor:
     """
-    Does not arrays with uncorrect shape yet
+    A tensor is described by a shape (self.shape), and a list (self.data)
+    self.nb_dim indicates the number of dimensions
+    - self.size gives the total size of the tensor (corresponds to the product of the variables in self.shape)
+    - self.respective_sizes give the slices for each dimension. 
+    For instance, if a tensor is (2, 4, 4), if I want tensor[0], the indices of self.data I need are 0 and 16, so the respective size of the first dimension is 16
     """
+    def __init__(self, l, shape=None):
+        if shape is None:
+            self.shape = Tensor._get_shape(l)
+        else:
+            self.shape = shape
+        self.nb_dim = len(self.shape)
+        self.size = Tensor._get_size(self.shape)
+        self.respective_sizes = Tensor._get_respective_sizes(self.shape, self.size)
 
-    def __init__(self, l, dtype=None, requires_grad=False):
-        self.l = Tensor._initialize_tensor_variables(
-            l, requires_grad=requires_grad, dtype=dtype
-        )
-        self.dtype = dtype
-        self.shape = self.l.shape
+        if isinstance(l[0], list):
+            self.data = Tensor._flatten(l)
+        else:
+            self.data = l
 
     @staticmethod
-    def _browse_tensor_indicies(shape):
-        index = [0] * len(shape)
-        # Indicateur pour savoir quand arrêter de parcourir l'array
+    def _get_shape(l):
+        shape = []
         done = False
-        # Tant que nous n'avons pas fini de parcourir l'array
+        current_list = deepcopy(l)
         while not done:
-            # Afficher l'élément courant
-            yield tuple(index)
+            try:
+                shape.append(len(current_list))
+                current_list = current_list[0]
+            except:
+                done = True
 
-            # Passer à l'élément suivant
-            index[0] += 1
-            for i in range(len(shape)):
-                if index[i] >= shape[i]:
-                    index[i] = 0
-                    # Si nous sommes à la dernière dimension, nous avons fini de parcourir l'array
-                    if i == len(shape) - 1:
-                        done = True
-                    # Sinon, nous passons à la dimension suivante
-                    else:
-                        index[i + 1] += 1
+        return tuple(shape)
 
     @staticmethod
-    def _initialize_tensor_variables(l, requires_grad=False, dtype=None):
-        # Récupérer la shape de l'array et initialiser la liste des indices à 0
-        l = np.array(l)
-        shape = l.shape
-        tensor = np.empty(shape, dtype=object)
+    def _get_size(shape):
+        size = 1
+        for dim in shape:
+            size *= dim
+        return size
 
-        for index in Tensor._browse_tensor_indicies(shape):
-            # Afficher l'élément courant
-            tensor[tuple(index)] = flamb.Variable(
-                l[tuple(index)], dtype=dtype, requires_grad=requires_grad
-            )
+    @staticmethod
+    def _get_respective_sizes(shape, size):
+        respective_sizes = []
+        current_size = size
 
-        return tensor
+        for dim in shape:
+            current_size = current_size // dim
+            respective_sizes.append(current_size)
 
+        return respective_sizes
+
+    @staticmethod
+    def _flatten(l):
+        if isinstance(l, list):
+            flatten_data = []
+            for item in l:
+                flatten_data.extend(Tensor._flatten(item))
+            return flatten_data
+        else:
+            return [l]
+    
     def __getitem__(self, index):
-        return self.l[index]
+        if isinstance(index, int):
+            index = (index,)
+            
+        if isinstance(index, (tuple, list)):
+            nb_dim_asked = len(index)
+            assert (nb_dim_asked <= self.nb_dim), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
+            current_size = self.size
+            pos = 0
+            for shape_elt, index_elt in zip(self.shape, index):
+                current_size = current_size // shape_elt
+                pos += current_size*index_elt
+
+            return Tensor(self.data[pos:pos+current_size], shape=self.shape[nb_dim_asked:])
 
     def __setitem__(self, index, value):
-        self.l[index] = value
+        if isinstance(index, int):
+            index = (index,)
+            
+        if isinstance(index, (tuple, list)):
+            nb_dim_asked = len(index)
+            assert (nb_dim_asked <= self.nb_dim), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
 
-    def __add__(self, new_variable):
-        return Tensor(self.l + new_variable)
+            if nb_dim_asked == self.nb_dim:
+                # Test pour vérifier que c'est un entier
+                pass
+            elif nb_dim_asked < self.nb_dim:
+                # Test pour vérifier que c'est un tenseur
+                pass 
 
-    def __radd__(self, new_variable):
-        return self + new_variable
+            current_size = self.size
+            pos = 0
+            for shape_elt, index_elt in zip(self.shape, index):
+                current_size = current_size // shape_elt
+                pos += current_size*index_elt
 
-    def __iadd__(self, new_variable):
-        return self + new_variable
+            if nb_dim_asked:
+                self.data[pos] = value
+            else:
+                self.data[pos:pos+current_size] = value      
 
-    def __sub__(self, new_variable):
-        return Tensor(self.l - new_variable)
-
-    def __rsub__(self, new_variable):
-        return Tensor(new_variable - self.l)
-
-    def __isub__(self, new_variable):
-        return self - new_variable
-
-    def __mul__(self, new_variable):
-        return Tensor(self.l * new_variable)
-
-    def __rmul__(self, new_variable):
-        return self * new_variable
-
-    def __imul__(self, new_variable):
-        return self * new_variable
-
-    def __truediv__(self, new_variable):
-        return Tensor(self.l / new_variable)
-
-    def __rtruediv__(self, new_variable):
-        return Tensor(new_variable / self.l)
-
-    def __itruediv__(self, new_variable):
-        return self / new_variable
-
-    def sum(self):
-        return self.l.sum()
-
-    def reshape(self, shape):
-        self.l.reshape(shape)
 
     def __repr__(self):
-        return f"{self.l}"
+        # If dimension is 0, we just return tensor(value)
+        if self.nb_dim == 0:
+            return f"tensor({self.data[0]})"
 
+        else:
+            s = "tensor("
+            # We add the first parenthesis
+            for _ in range(self.nb_dim):
+                s = s + "["
+
+            index = [0] * self.nb_dim
+            # Indicateur pour savoir quand arrêter de parcourir l'array
+            done = False
+            # Tant que nous n'avons pas fini de parcourir l'array
+            while not done:
+                # Afficher l'élément courant
+                somme = 0
+                for siz, ind in zip(self.respective_sizes, index):
+                    somme += siz*ind
+                
+                s += f"{self.data[somme]}"
+
+                index[-1] += 1
+                nb_to_add = 0
+                for i in reversed(range(self.nb_dim)):
+                    if index[i] >= self.shape[i]:
+                        s += "]"
+
+                        index[i] = 0
+                        # Si nous sommes à la dernière dimension, nous avons fini de parcourir l'array
+                        if i == 0:
+                            done = True
+
+                        # Sinon, nous passons à la dimension suivante
+                        else:
+                            nb_to_add += 1
+                            index[i-1] += 1
+
+                if not done:
+                    s += ", "
+                    for _ in range(nb_to_add):
+                        s += "["
+                
+            s += ")"
+            return s
