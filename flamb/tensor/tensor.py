@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+
 class Tensor:
     """
     A tensor is described by a shape (self.shape), and a list (self.data)
@@ -8,6 +9,7 @@ class Tensor:
     - self.respective_sizes give the slices for each dimension. 
     For instance, if a tensor is (2, 4, 4), if I want tensor[0], the indices of self.data I need are 0 and 16, so the respective size of the first dimension is 16
     """
+
     def __init__(self, l, shape=None):
         if shape is None:
             self.shape = Tensor._get_shape(l)
@@ -63,52 +65,78 @@ class Tensor:
             return flatten_data
         else:
             return [l]
-    
+
+    @staticmethod
+    def _loop_on_indicies(shape):
+        nb_dim = len(shape)
+        index = [0] * nb_dim
+        # Indicateur pour savoir quand arrêter de parcourir l'array
+        done = False
+        # Tant que nous n'avons pas fini de parcourir l'array
+        while not done: 
+            yield index
+            index[-1] += 1
+            for i in reversed(range(nb_dim)):
+                if index[i] >= shape[i]:
+                    index[i] = 0
+                    # Si nous sommes à la dernière dimension, nous avons fini de parcourir l'array
+                    if i == 0:
+                        done = True
+
+                    # Sinon, nous passons à la dimension suivante
+                    else:
+                        index[i - 1] += 1
+
     def __getitem__(self, index):
         if isinstance(index, int):
             index = (index,)
-            
+
         if isinstance(index, (tuple, list)):
             nb_dim_asked = len(index)
-            assert (nb_dim_asked <= self.nb_dim), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
+            assert (
+                nb_dim_asked <= self.nb_dim
+            ), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
             current_size = self.size
             pos = 0
             for shape_elt, index_elt in zip(self.shape, index):
                 current_size = current_size // shape_elt
-                pos += current_size*index_elt
+                pos += current_size * index_elt
 
-            return Tensor(self.data[pos:pos+current_size], shape=self.shape[nb_dim_asked:])
+            return Tensor(
+                self.data[pos : pos + current_size], shape=self.shape[nb_dim_asked:]
+            )
 
     def __setitem__(self, index, value):
         if isinstance(index, int):
             index = (index,)
-            
+
         if isinstance(index, (tuple, list)):
             nb_dim_asked = len(index)
-            assert (nb_dim_asked <= self.nb_dim), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
+            assert (
+                nb_dim_asked <= self.nb_dim
+            ), f"Too many dimensions (dimension of the array is {self.nb_dim}, and you asked for {nb_dim_asked} dimensions)"
 
             if nb_dim_asked == self.nb_dim:
                 # Test pour vérifier que c'est un entier
                 pass
             elif nb_dim_asked < self.nb_dim:
                 # Test pour vérifier que c'est un tenseur
-                pass 
+                pass
 
             current_size = self.size
             pos = 0
             for shape_elt, index_elt in zip(self.shape, index):
                 current_size = current_size // shape_elt
-                pos += current_size*index_elt
+                pos += current_size * index_elt
 
             if nb_dim_asked:
                 self.data[pos] = value
             else:
-                self.data[pos:pos+current_size] = value      
-
+                self.data[pos : pos + current_size] = value
 
     def __eq__(self, value):
         # Only works with value that are not real tensors (tensors of dimension 0)
-        assert (len(self.data) == 1), "Cannot compare tensor and value"
+        assert len(self.data) == 1, "Cannot compare tensor and value"
         return self.data[0] == value
 
     def __repr__(self):
@@ -130,8 +158,8 @@ class Tensor:
                 # Afficher l'élément courant
                 somme = 0
                 for siz, ind in zip(self.respective_sizes, index):
-                    somme += siz*ind
-                
+                    somme += siz * ind
+
                 s += f"{self.data[somme]}"
 
                 index[-1] += 1
@@ -148,12 +176,12 @@ class Tensor:
                         # Sinon, nous passons à la dimension suivante
                         else:
                             nb_to_add += 1
-                            index[i-1] += 1
+                            index[i - 1] += 1
 
                 if not done:
                     s += ", "
                     for _ in range(nb_to_add):
                         s += "["
-                
+
             s += ")"
             return s
