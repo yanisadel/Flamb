@@ -106,6 +106,11 @@ class Tensor:
                 self.data[pos:pos+current_size] = value      
 
 
+    def __eq__(self, value):
+        # Only works with value that are not real tensors (tensors of dimension 0)
+        assert (len(self.data) == 1), "Cannot compare tensor and value"
+        return self.data[0] == value
+
     def __repr__(self):
         # If dimension is 0, we just return tensor(value)
         if self.nb_dim == 0:
