@@ -1,6 +1,5 @@
 import flamb
 
-
 def test_zeros():
     shape = (2, 2)
     tensor = flamb.zeros(shape)

@@ -10,6 +10,8 @@ __all__ = [
     "Tensor",
     "zeros",
     "ones",
+    "rand",
+    "to_tensor",
     "no_grad",
     "environ",
     "functional",
