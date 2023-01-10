@@ -1,3 +1,5 @@
 from .tensor import Tensor
+from ._functions import *
 
-__all__ = ['Tensor']
+__all__ = ["Tensor", "zeros", "ones"]
+
