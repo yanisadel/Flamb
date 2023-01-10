@@ -17,3 +17,5 @@ class Linear(LayerBase):
 
         return x
 
+    def get_parameters(self):
+        return flamb.concatenate(self.weights.flatten(), self.bias)

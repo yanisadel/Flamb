@@ -12,6 +12,7 @@ __all__ = [
     "ones",
     "rand",
     "to_tensor",
+    "concatenate",
     "dot",
     "matmul",
     "no_grad",

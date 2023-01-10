@@ -1,3 +1,4 @@
 from .layers import *
+from .module import Module
 
-__all__ = ["layers"]
+__all__ = ["Module", "layers"]
