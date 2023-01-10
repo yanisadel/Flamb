@@ -14,7 +14,7 @@ def test_exp():
     assert F.exp(x) == math.exp(5)
     assert F.exp(y) == math.exp(y)
 
-    l = Tensor(deepcopy(l_ref))
+    l = flamb.to_tensor(l_ref)
     l = F.exp(l)
     assert l[0][0] == math.exp(1)
 
@@ -25,7 +25,7 @@ def test_cos():
     assert F.cos(x) == math.cos(5)
     assert F.cos(y) == math.cos(y)
 
-    l = Tensor(deepcopy(l_ref))
+    l = flamb.to_tensor(l_ref)
     l = F.cos(l)
     assert l[0][0] == math.cos(1)
 
@@ -36,7 +36,7 @@ def test_sin():
     assert F.sin(x) == math.sin(5)
     assert F.sin(y) == math.sin(y)
 
-    l = Tensor(deepcopy(l_ref))
+    l = flamb.to_tensor(l_ref)
     l = F.sin(l)
     assert l[0][0] == math.sin(1)
 
@@ -47,7 +47,7 @@ def test_tan():
     assert F.tan(x) == math.tan(5)
     assert F.tan(y) == math.tan(y)
 
-    l = Tensor(deepcopy(l_ref))
+    l = flamb.to_tensor(l_ref)
     l = F.tan(l)
     assert l[0][0] == math.tan(1)
 
@@ -58,7 +58,7 @@ def test_tanh():
     assert F.tanh(x) == math.tanh(5)
     assert F.tanh(y) == math.tanh(y)
 
-    l = Tensor(deepcopy(l_ref))
+    l = flamb.to_tensor(l_ref)
     l = F.tanh(l)
     assert l[0][0] == math.tanh(1)
 
