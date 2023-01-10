@@ -238,3 +238,7 @@ class Tensor:
         for elt in self.data:
             res += elt
         return res
+
+    def map(self, function):
+        """Map a function on the tensor"""
+        return Tensor([function(elt) for elt in self.data], self.shape)
