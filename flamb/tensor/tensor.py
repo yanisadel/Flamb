@@ -185,3 +185,51 @@ class Tensor:
 
             s += ")"
             return s
+
+    def __add__(self, var):
+        """Works only for int, float and for Tensor of same shape"""
+        if isinstance(var, (int, float)):
+            new_data = [elt + var for elt in self.data]
+            return Tensor(new_data, self.shape)
+
+        elif isinstance(var, Tensor):
+            assert (
+                var.shape == self.shape
+            ), "Sum between tensors of different shapes is not implemented yet"
+            new_data = [elt + elt2 for elt, elt2 in zip(self.data, var.data)]
+            return Tensor(new_data, self.shape)
+
+    def __radd__(self, var):
+        return self + var
+
+    def __iadd__(self, var):
+        return self + var
+
+    def __mul__(self, var):
+        if isinstance(var, (int, float)):
+            new_data = [elt * var for elt in self.data]
+            return Tensor(new_data, self.shape)
+
+        elif isinstance(var, Tensor):
+            assert (
+                var.shape == self.shape
+            ), "Product between tensors of different shapes is not implemented yet"
+            new_data = [elt * elt2 for elt, elt2 in zip(self.data, var.data)]
+            return Tensor(new_data, self.shape)
+
+    def __rmul__(self, var):
+        return self * var
+
+    def __imul__(self, var):
+        return self * var
+
+    def __sub__(self, var):
+        """Works only for int, float and for Tensor of same shape"""
+        return self + (-1) * var
+
+    def __rsub__(self, var):
+        return (-1) * self + var
+
+    def __isub__(self, var):
+        return self - var
+

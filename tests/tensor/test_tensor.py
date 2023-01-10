@@ -57,14 +57,38 @@ def test_loop_on_indicies():
     ], "The loop on indicies does not work"
 
 
-def test_sum():
+def test_product_operator():
+    global l_ref
+    l = deepcopy(l_ref)
+    l = Tensor(l)
+    l2 = 4 * l
+    assert (
+        l2[(0, 1, 2)] == l_ref[0][1][2] * 4
+    ), f"l[(0,1,2)] should be have been equal to {l_ref[0][1][2]*2}, but it is {l2[(0,1,2)]}"
+
+
+def test_sum_operator():
     global l_ref
     l = deepcopy(l_ref)
     l = Tensor(l)
     l2 = l + l
     assert (
-        l2[(0, 1, 2)] == l[(0, 1, 2)] * 2
-    ), f"l[(0,1,2)] should be have been equal to {l[(0,1,2)]*2}, but it is {l2[(0,1,2)]}"
+        l2[(0, 1, 2)] == l_ref[0][1][2] * 2
+    ), f"l[(0,1,2)] should be have been equal to {l_ref[0][1][2]*2}, but it is {l2[(0,1,2)]}"
+
+
+def test_sub_operator():
+    global l_ref
+    l = deepcopy(l_ref)
+    l = Tensor(l)
+    l2 = Tensor([[[1, 2+11, 3, 4], [5, 6, 7, 8]], [[9, 10, 11, 12], [13, 14, 15, 16]]])
+
+    l3 = l2 - l
+    assert (
+        l3[(0, 0, 1)] == 11
+    ), f"l3[(0,0,1)] should be have been equal to {11}, but it is {l3[(0, 0, 1)]}"
+
+
 
 
 if __name__ == "__main__":
@@ -72,4 +96,6 @@ if __name__ == "__main__":
     test_read_value()
     test_modify_value()
     test_loop_on_indicies()
-    test_sum()
+    test_product_operator()
+    test_sum_operator()
+    test_sub_operator()
