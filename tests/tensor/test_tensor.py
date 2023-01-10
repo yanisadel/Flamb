@@ -38,23 +38,22 @@ def test_modify_value():
 
 def test_loop_on_indicies():
     shape = (2, 2)
-    l = [deepcopy(index) for index in Tensor._loop_on_indicies(shape)]
+    l = [index for index in Tensor._loop_on_indicies(shape)]
 
-    assert l == [[0, 0], [0, 1], [1, 0], [1, 1]], "The loop on indicies does not work"
+    assert l == [(0, 0), (0, 1), (1, 0), (1, 1)], "The loop on indicies does not work"
 
     shape = (2, 2, 2)
-    l = [deepcopy(index) for index in Tensor._loop_on_indicies(shape)]
-    # I don't know why we need deepcopy but if we don't use it, all the elements of the list are similar
+    l = [index for index in Tensor._loop_on_indicies(shape)]
 
     assert l == [
-        [0, 0, 0],
-        [0, 0, 1],
-        [0, 1, 0],
-        [0, 1, 1],
-        [1, 0, 0],
-        [1, 0, 1],
-        [1, 1, 0],
-        [1, 1, 1],
+        (0, 0, 0),
+        (0, 0, 1),
+        (0, 1, 0),
+        (0, 1, 1),
+        (1, 0, 0),
+        (1, 0, 1),
+        (1, 1, 0),
+        (1, 1, 1),
     ], "The loop on indicies does not work"
 
 

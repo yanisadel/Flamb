@@ -73,8 +73,8 @@ class Tensor:
         # Indicateur pour savoir quand arrêter de parcourir l'array
         done = False
         # Tant que nous n'avons pas fini de parcourir l'array
-        while not done: 
-            yield index
+        while not done:
+            yield tuple(index)
             index[-1] += 1
             for i in reversed(range(nb_dim)):
                 if index[i] >= shape[i]:
