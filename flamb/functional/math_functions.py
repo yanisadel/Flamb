@@ -49,3 +49,12 @@ def tanh(x):
         return x.tanh()
     else:
         return math.tanh(x)
+
+
+def ReLU(x):
+    if isinstance(x, flamb.Tensor):
+        return np.vectorize(lambda x: max(x, 0))(x)
+    elif isinstance(x, flamb.Variable):
+        return x.ReLU()
+    else:
+        return max(x, 0)

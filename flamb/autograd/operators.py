@@ -130,3 +130,12 @@ class TanhOperator(BaseOperator):
         variable = convert_variable(self.variables[0])
         return [1 - math.tanh(variable) ** 2]
 
+class ReLUOperator(BaseOperator):
+    """ReLU of a variable"""
+
+    def gradient(self):
+        variable = convert_variable(self.variables[0])
+        if variable > 0:
+            return [1]
+        else:
+            return [0]

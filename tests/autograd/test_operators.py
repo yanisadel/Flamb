@@ -77,6 +77,18 @@ def test_tanh():
     assert operator.gradient() == [1 - math.tanh(3) ** 2], "Gradient is not correct"
 
 
+def test_ReLU():
+    x = Variable(3)
+    operator = ReLUOperator(x)
+    assert operator.variables == [x], "Variables are not correct"
+    assert operator.gradient() == [1], "Gradient is not correct"
+
+    x = Variable(0)
+    operator = ReLUOperator(x)
+    assert operator.variables == [x], "Variables are not correct"
+    assert operator.gradient() == [0], "Gradient is not correct"
+
+
 if __name__ == "__main__":
     test_sum()
     test_product()
@@ -87,3 +99,4 @@ if __name__ == "__main__":
     test_sin()
     test_tan()
     test_tanh()
+    test_ReLU()

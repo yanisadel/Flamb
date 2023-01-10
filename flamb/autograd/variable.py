@@ -3,7 +3,7 @@ This file defines a Variable class, which allows to track the gradient of a vari
 """
 
 import flamb
-from flamb.autograd.operators import *
+from .operators import *
 from flamb.utils import *
 import math
 
@@ -211,6 +211,15 @@ class Variable:
         new_value = math.tanh(self.value)
         requires_grad = self.requires_grad
         last_operation = TanhOperator(self)
+
+        return Variable(
+            new_value, requires_grad=requires_grad, last_operation=last_operation,
+        )
+
+    def ReLU(self):
+        new_value = max(self.value, 0)
+        requires_grad = self.requires_grad
+        last_operation = ReLUOperator(self)
 
         return Variable(
             new_value, requires_grad=requires_grad, last_operation=last_operation,

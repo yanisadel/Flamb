@@ -39,7 +39,7 @@ def test_values():
     assert F.tanh(x) == math.tanh(value), f"Tanh value is not correct for {value}"
 
 
-def test_gradients():
+def test_elementary_gradients():
     x = Variable(4)
     y = 2 * x
     y.backward()
@@ -54,23 +54,6 @@ def test_gradients():
     y = 1 / x
     y.backward()
     assert x.grad == -1 / 4, "Gradient should be -1/4"
-
-    x = Variable(2)
-    y = (x ** 2 - 1) ** 2
-    y.backward()
-    assert x.grad == 24, "Gradient should be 24"
-
-    x = Variable(2)
-    y = Variable(5)
-    z = y / x ** 2
-    z.backward()
-    assert x.grad == -10 / 8, "Gradient should be -10/8"
-
-    x = Variable(2)
-    y = Variable(5)
-    z = 1 / x + (x ** 2 - 1) ** 2 + y / x ** 2
-    z.backward()
-    assert x.grad == 22.5, "Gradient should be 22.5"
 
     x = Variable(5, requires_grad=True)
     y = F.exp(x)
@@ -101,6 +84,34 @@ def test_gradients():
     assert x.grad == (
         1 - math.tanh(5) ** 2
     ), "Gradient of tanh(5) should be 1 - tanh(5)**2"
+
+
+    x = Variable(-2, requires_grad=True)
+    y = F.ReLU(x)
+    y.backward()
+    assert x.grad == (
+        0
+    ), "Gradient of ReLU(-2) should be 0"
+
+
+def test_difficult_gradients():
+    x = Variable(2)
+    y = (x ** 2 - 1) ** 2
+    y.backward()
+    assert x.grad == 24, "Gradient should be 24"
+
+    x = Variable(2)
+    y = Variable(5)
+    z = y / x ** 2
+    z.backward()
+    assert x.grad == -10 / 8, "Gradient should be -10/8"
+
+    x = Variable(2)
+    y = Variable(5)
+    z = 1 / x + (x ** 2 - 1) ** 2 + y / x ** 2
+    z.backward()
+    assert x.grad == 22.5, "Gradient should be 22.5"
+
 
     value = 5
     x = Variable(value, requires_grad=True)
