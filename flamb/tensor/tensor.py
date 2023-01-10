@@ -233,3 +233,8 @@ class Tensor:
     def __isub__(self, var):
         return self - var
 
+    def sum(self):
+        res = 0
+        for elt in self.data:
+            res += elt
+        return res

@@ -81,7 +81,9 @@ def test_sub_operator():
     global l_ref
     l = deepcopy(l_ref)
     l = Tensor(l)
-    l2 = Tensor([[[1, 2+11, 3, 4], [5, 6, 7, 8]], [[9, 10, 11, 12], [13, 14, 15, 16]]])
+    l2 = Tensor(
+        [[[1, 2 + 11, 3, 4], [5, 6, 7, 8]], [[9, 10, 11, 12], [13, 14, 15, 16]]]
+    )
 
     l3 = l2 - l
     assert (
@@ -89,6 +91,12 @@ def test_sub_operator():
     ), f"l3[(0,0,1)] should be have been equal to {11}, but it is {l3[(0, 0, 1)]}"
 
 
+def test_sum_method():
+    global l_ref
+    l = deepcopy(l_ref)
+    l = Tensor(l)
+
+    assert l.sum() == 16 * 17 // 2, "Sum method is not correct"
 
 
 if __name__ == "__main__":
@@ -99,3 +107,4 @@ if __name__ == "__main__":
     test_product_operator()
     test_sum_operator()
     test_sub_operator()
+    test_sum_method()
