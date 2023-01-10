@@ -99,6 +99,15 @@ def test_sum_method():
     assert l.sum() == 16 * 17 // 2, "Sum method is not correct"
 
 
+def test_map():
+    global l_ref
+    l = deepcopy(l_ref)
+    l = Tensor(l)
+    l = l.map(lambda x: x ** 2)
+
+    assert l[(0, 1, 2)] == l_ref[0][1][2] ** 2, "Map method is not correct"
+
+
 if __name__ == "__main__":
     test_shape()
     test_read_value()
@@ -108,3 +117,4 @@ if __name__ == "__main__":
     test_sum_operator()
     test_sub_operator()
     test_sum_method()
+    test_map()
