@@ -17,13 +17,14 @@ def test_module():
     x = flamb.ones((32, 10))
     model = Model()
 
-    assert model.parameters is None, f"model.parameters should be None but is {model.parameters}"
+    assert (model.parameters is None), f"model.parameters should be None but is {model.parameters}"
     output = model(x)
 
-    assert output.shape == (32, 50), f"Ouput shape should be (32, 50) but it is {output.shape}"
+    assert (output.shape == (32, 50)), f"Ouput shape should be (32, 50) but it is {output.shape}"
 
-    assert model.parameters.shape == (30*10 + 30 + 50*30 + 50,), "The number of parameters is not correct"
+    assert (model.parameters.shape == (30*10 + 30 + 50*30 + 50,)), "The number of parameters is not correct"
 
 
 if __name__ == '__main__':
     test_module()
+
