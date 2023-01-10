@@ -12,6 +12,8 @@ __all__ = [
     "ones",
     "rand",
     "to_tensor",
+    "dot",
+    "matmul",
     "no_grad",
     "environ",
     "functional",

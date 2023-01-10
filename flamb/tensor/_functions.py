@@ -28,6 +28,12 @@ def to_tensor(l):
         tensor[index] = l[index]
     return tensor
 
+def matmul(a, b):
+    return np.matmul(a, b)
+    
+def dot(a, b):
+    return np.dot(a, b)
+    
 def _loop_on_indicies(shape):
     nb_dim = len(shape)
     index = [0] * nb_dim
