@@ -84,6 +84,10 @@ def test_sum_method():
     assert l.sum() == 16 * 17 // 2, "Sum method is not correct"
 
 
+def test_norm_method():
+    l = flamb.to_tensor([1,2,3,4])
+    assert l.norm() == (1 + 4 + 9 + 16)**(1/2), "Norm method is not correct"
+    
 
 if __name__ == "__main__":
     test_shape()
@@ -93,3 +97,4 @@ if __name__ == "__main__":
     test_sum_operator()
     test_sub_operator()
     test_sum_method()
+    test_norm_method()
