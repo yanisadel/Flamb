@@ -8,7 +8,9 @@ def test_shape():
     output = layer(x)
 
     assert (output.shape == (8, 30)), f"Shape should be (8, 30) but is {output.shape}"
-
+    assert (layer.weights.shape == (20, 30))
+    assert (layer.bias.shape == (30,))
+    
 def test_values():
     x = flamb.to_tensor([2,2])
     layer = nn.Linear(2, 2)

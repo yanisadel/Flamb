@@ -9,7 +9,7 @@ class Linear(LayerBase):
         self.weights = flamb.rand((input_size, output_size), requires_grad=True)
         self.bias = flamb.rand((output_size,))
 
-    def forward(self, x):
+    def __call__(self, x):
         assert (x.shape[-1] == self.input_size), f"Input size of x should be {self.input_size}, but got {x.shape[-1]}"
         x = x.dot(self.weights)
         x += self.bias
