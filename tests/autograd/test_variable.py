@@ -4,7 +4,18 @@ from flamb import functional as F
 import math
 
 
-def test_values():
+def test_equality_operators():
+    """Test of the operators =, <, >, >= and <="""
+    x = Variable(5)
+    assert x == 5
+    assert x > 4
+    assert x < 5.5
+    assert x >= 4.2
+    assert x <= 5
+
+
+def test_operators():
+    """Test of the operators +, +=, -, -=, *, *=, /, /="""
     value = 5.5
     x = Variable(value, requires_grad=False)
     assert x ** 2 == value ** 2, f"Value is not correct for {value}**2"
@@ -55,6 +66,8 @@ def test_elementary_gradients():
     y.backward()
     assert x.grad == -1 / 4, "Gradient should be -1/4"
 
+
+def test_math_functions_gradients():
     x = Variable(5, requires_grad=True)
     y = F.exp(x)
     y.backward()
@@ -92,6 +105,12 @@ def test_elementary_gradients():
     assert x.grad == (
         0
     ), "Gradient of ReLU(-2) should be 0"
+    x = Variable(5, requires_grad=True)
+    y = F.ReLU(x)
+    y.backward()
+    assert x.grad == (
+        1
+    ), "Gradient of ReLU(5) should be 1"
 
 
 def test_difficult_gradients():
@@ -153,7 +172,40 @@ def test_difficult_gradients():
     # < 1e-3 is because of the approximation errors
 
 
+def test_reset_state():
+    """Test that the reset_state method works"""
+    x = Variable(5, requires_grad=True)
+    y = (x*2 + 1)*(x - 1)
+    y.reset_state()
+    assert y.grad == 0
+    assert y.last_operation is None
+
+
+def test_inplace():
+    """
+    Test that if a variable is modified inplace (with a += for instance),
+    and if we are in a flamb.no_grad context, then the variable is not erased (ie the address of the variables remains the same)
+    
+    Maybe in the future it would be better than the variable is not erased even if we are not in a no_grad context, but it makes gradient computation more difficult
+    """
+    x = Variable(5, requires_grad=True)
+    first_id = id(x)
+    y = x**2
+    y.backward()
+    with flamb.no_grad():
+        x -= 1e-1*x.grad
+        x.reset_state()
+        x.requires_grad = True
+
+    current_id = id(x)
+    assert first_id == current_id
+
+
 if __name__ == "__main__":
-    test_values()
+    test_equality_operators()
+    test_operators()
     test_elementary_gradients()
+    test_math_functions_gradients()
     test_difficult_gradients()
+    test_reset_state()
+    test_inplace()

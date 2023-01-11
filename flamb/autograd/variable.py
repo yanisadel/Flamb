@@ -34,6 +34,11 @@ class Variable:
         return f"{self.value}"
 
     def __add__(self, var, inplace=False):
+        """
+        The inplace parameter is equal to False if we want a new variable to be created,
+        or inplace=True if we want the value to be modified in the current instance.
+        If inplace=True, then the gradient is set back to 0 and the last operations made on the instance are forgotten
+        """
         new_value = self.value
         requires_grad = self.requires_grad
         if isinstance(var, Variable):
@@ -205,7 +210,7 @@ class Variable:
         var = convert_variable(var)
         return self.value > var
 
-    def __ge_(self, var):
+    def __ge__(self, var):
         """>="""
         var = convert_variable(var)
         return self.value >= var
@@ -304,8 +309,6 @@ class Variable:
                 "Cannot compute gradient in because grad is disabled (you're probably in a flamb.no_grad context)"
             )
     
-    def get_value(self):
-        return self.value
 
     def reset_state(self):
         self.grad = 0
