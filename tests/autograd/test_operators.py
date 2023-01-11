@@ -5,6 +5,7 @@ import math
 
 
 def test_sum():
+    """Test that the SumOperator gives the right gradient"""
     x, y, z = 2, 3, 4
     operator = SumOperator(x, y, z)
     assert operator.variables == [x, y, z], "Variables are not correct"
@@ -17,6 +18,7 @@ def test_sum():
 
 
 def test_product():
+    """Test that the ProductOperator gives the right gradient"""
     x, y, z = 2, 3, 4
     operator = ProductOperator(x, y, z)
     assert operator.variables == [x, y, z], "Variables are not correct"
@@ -29,6 +31,7 @@ def test_product():
 
 
 def test_division():
+    """Test that the DivisionOperator gives the right gradient"""
     x, y = Variable(3), Variable(4)
     operator = DivisionOperator(x, y)
     assert operator.variables == [x, y], "Variables are not correct"
@@ -36,6 +39,7 @@ def test_division():
 
 
 def test_power():
+    """Test that the PowerOperator gives the right gradient"""
     x, power = Variable(2), 3
     operator = PowerOperator(x, power)
     assert operator.variables == [x], "Variables are not correct"
@@ -43,6 +47,7 @@ def test_power():
 
 
 def test_exp():
+    """Test that the ExpOperator gives the right gradient"""
     x = Variable(3)
     operator = ExpOperator(x)
     assert operator.variables == [x], "Variables are not correct"
@@ -50,6 +55,7 @@ def test_exp():
 
 
 def test_cos():
+    """Test that the CosOperator gives the right gradient"""
     x = Variable(3)
     operator = CosOperator(x)
     assert operator.variables == [x], "Variables are not correct"
@@ -57,6 +63,7 @@ def test_cos():
 
 
 def test_sin():
+    """Test that the SinOperator gives the right gradient"""
     x = Variable(3)
     operator = SinOperator(x)
     assert operator.variables == [x], "Variables are not correct"
@@ -64,6 +71,7 @@ def test_sin():
 
 
 def test_tan():
+    """Test that the TanOperator gives the right gradient"""
     x = Variable(3)
     operator = TanOperator(x)
     assert operator.variables == [x], "Variables are not correct"
@@ -71,6 +79,7 @@ def test_tan():
 
 
 def test_tanh():
+    """Test that the TanhOperator gives the right gradient"""
     x = Variable(3)
     operator = TanhOperator(x)
     assert operator.variables == [x], "Variables are not correct"
@@ -78,6 +87,7 @@ def test_tanh():
 
 
 def test_ReLU():
+    """Test that the TanhOperator gives the right gradient"""
     x = Variable(3)
     operator = ReLUOperator(x)
     assert operator.variables == [x], "Variables are not correct"

@@ -130,6 +130,7 @@ class TanhOperator(BaseOperator):
         variable = convert_variable(self.variables[0])
         return [1 - math.tanh(variable) ** 2]
 
+
 class ReLUOperator(BaseOperator):
     """ReLU of a variable"""
 
