@@ -62,7 +62,10 @@ class Variable:
         return self + var
 
     def __iadd__(self, var):
-        return self.__add__(var, inplace=True)
+        if flamb.environ['is_grad_enabled']:
+            return self.__add__(var, inplace=False)
+        else:
+            return self.__add__(var, inplace=True)
 
     def __sub__(self, var, inplace=False):
         negative_var = var * (-1)
@@ -73,7 +76,10 @@ class Variable:
         return negative_value + var
 
     def __isub__(self, var):
-        return self.__sub__(var, inplace=True)
+        if flamb.environ['is_grad_enabled']:
+            return self.__sub__(var, inplace=False)
+        else:
+            return self.__sub__(var, inplace=True)
 
     def __mul__(self, var, inplace=False):
         new_value = self.value
@@ -103,7 +109,10 @@ class Variable:
         return self * var
 
     def __imul__(self, var):
-        return self.__mul__(var, inplace=True)
+        if flamb.environ['is_grad_enabled']:
+            return self.__mul__(var, inplace=False)
+        else:
+            return self.__mul__(var, inplace=True)
 
     def __truediv__(self, var, inplace=False):
         new_value = self.value
@@ -155,7 +164,10 @@ class Variable:
             )
 
     def __itruediv__(self, var):
-        return self.__truediv__(var, inplace=True)
+        if flamb.environ['is_grad_enabled']:
+            return self.__truediv__(var, inplace=False)
+        else:
+            return self.__truediv__(var, inplace=True)
 
     def __floordiv__(self, var):
         raise Exception(r"The operation // is not implemented yet")

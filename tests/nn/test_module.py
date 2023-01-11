@@ -20,7 +20,6 @@ def test_module():
     output = model(x)
 
     assert (output.shape == (32, 50)), f"Ouput shape should be (32, 50) but it is {output.shape}"
-
     assert (model.parameters.shape == (30*10 + 30 + 50*30 + 50,)), "The number of parameters is not correct"
 
 
