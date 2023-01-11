@@ -1,4 +1,4 @@
-# flamb
+# Flamb
 
 Flamb is a deep learning library that is developed from scratch, and that contains the core functionality of PyTorch.  
 
