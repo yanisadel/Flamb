@@ -14,7 +14,4 @@ class SGD(Optimizer):
         with flamb.no_grad():
             for i in range(self.nb_params):
                 self.params[i] -= self.learning_rate*self.params[i].grad
-                self.params[i].requires_grad = True
-                self.params[i].grad = 0
-                self.params[i].last_operation = None
-                
+                self.params[i].reset_state(requires_grad=True)

@@ -310,6 +310,7 @@ class Variable:
             )
     
 
-    def reset_state(self):
+    def reset_state(self, requires_grad=False):
         self.grad = 0
         self.last_operation = None
+        self.requires_grad = requires_grad
