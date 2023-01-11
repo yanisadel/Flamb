@@ -89,7 +89,6 @@ if __name__ == "__main__":
     test_shape()
     test_read_value()
     test_modify_value()
-    test_loop_on_indicies()
     test_product_operator()
     test_sum_operator()
     test_sub_operator()
