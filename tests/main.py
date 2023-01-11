@@ -15,6 +15,26 @@ from flamb import functional as F
 Try to minimize the square function
 """
 
+
+def f(x):
+    return x**2
+
+x = Variable(5, requires_grad=True)
+learning_rate = 1e-2
+params = flamb.to_tensor([x])
+optimizer = flamb.nn.optimizers.SGD(params, learning_rate=learning_rate)
+
+for _ in range(500):        
+    loss = f(x)
+    print(f"Loss : {loss}")
+    loss.backward()
+    optimizer.step()
+
+print(x)
+
+
+
+
 def f(x):
     return x**2
 
@@ -31,6 +51,9 @@ for _ in range(500):
     x.requires_grad = True
 
 print(x)
+
+
+
 
 """
 Try to minimize the square function with two parameters
@@ -64,9 +87,9 @@ Try a more complex problem
 weight_list = [80, 75, 72, 40, 34, 50, 61, 54, 52]
 size_list = [180, 170, 160, 150, 120, 149, 180, 142, 164]
 imc_list = [24.69, 25.95, 28.12, 17.77, 23.6, 22.5, 18.8, 26.7, 19.3]
-weight_list = [value/80 for value in weight_list]
-size_list = [value/180 for value in size_list]
-imc_list = [value/25 for value in imc_list]
+weight_list = [value for value in weight_list]
+size_list = [value for value in size_list]
+imc_list = [value for value in imc_list]
 
 
 vars = [Variable(1e-2) for _ in range(6)]

@@ -69,14 +69,3 @@ if __name__ == "__main__":
     test_sin()
     test_tan()
     test_tanh()
-
-
-
-x = Variable(5)
-y = 5
-assert F.exp(x) == math.exp(5)
-assert F.exp(y) == math.exp(y)
-
-l = flamb.to_tensor(l_ref)
-l = F.exp(l)
-assert l[0][0] == math.exp(1)

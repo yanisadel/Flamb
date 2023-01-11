@@ -13,17 +13,21 @@ class Model(nn.Module):
         self.layer1 = nn.Linear(10, 20)
         self.layer2 = nn.Linear(20, 30)
         self.layer3 = nn.Linear(30, 1)
+        self.initialize_parameters()
 
-    def forward(self, x):
+    def __call__(self, x):
         x = F.ReLU(self.layer1(x))
         x = F.ReLU(self.layer2(x))
-        x = F.ReLU(self.layer3(x))
+        x = self.layer3(x)
         return x
 
-model = Model()
+    
 
-learning_rate = 1e-5
-EPOCHS = 3
+model = Model()
+loss_object = nn.losses.MSE()
+optimizer = nn.optimizers.SGD(model.parameters, learning_rate=1e-4)
+
+EPOCHS = 50
 
 losses = []
 for epoch in range(EPOCHS):
@@ -32,15 +36,11 @@ for epoch in range(EPOCHS):
     for _ in range(1):
         x = flamb.ones((16, 10))
         output = model(x)
-        loss = (output.sum()/16)**2
+        target = flamb.zeros((16,1))
+        loss = loss_object(output, target)
         loss.backward()
-        nb_parameters = len(model.parameters)
-        with flamb.no_grad():
-            for i in range(nb_parameters):
-                model.parameters[i] -= learning_rate*model.parameters[i].grad
-                model.parameters[i].requires_grad = True
-                model.parameters[i].grad = 0
-                model.parameters[i].last_operation = None
+        optimizer.step()
+        
         total_loss += loss
 
     losses.append(total_loss.get_value())

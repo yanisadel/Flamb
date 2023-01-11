@@ -26,7 +26,10 @@ def to_tensor(l, requires_grad=False, dtype=object):
     shape = l.shape
     tensor = flamb.Tensor(shape, dtype=dtype)
     for index in loop_on_indicies(shape):
-        tensor[index] = flamb.Variable(l[index], requires_grad=requires_grad)
+        if not isinstance(l[index], flamb.Variable):
+            tensor[index] = flamb.Variable(l[index], requires_grad=requires_grad)
+        else:
+            tensor[index] = l[index]
     return tensor
 
 def matmul(a, b):

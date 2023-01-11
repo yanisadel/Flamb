@@ -155,4 +155,5 @@ def test_difficult_gradients():
 
 if __name__ == "__main__":
     test_values()
-    test_gradients()
+    test_elementary_gradients()
+    test_difficult_gradients()

@@ -33,7 +33,7 @@ class Variable:
     def __repr__(self):
         return f"{self.value}"
 
-    def __add__(self, var):
+    def __add__(self, var, inplace=False):
         new_value = self.value
         requires_grad = self.requires_grad
         if isinstance(var, Variable):
@@ -45,28 +45,37 @@ class Variable:
             raise Exception(f"Cannot sum a {self.__class__} and a {type(var)}")
 
         last_operation = SumOperator(self, var)
-        return Variable(
-            new_value, requires_grad=requires_grad, last_operation=last_operation,
-        )
+
+        if inplace:
+            self.value = new_value
+            self.grad = 0
+            self.requires_grad = False
+            self.last_operation = None
+            return self
+
+        else:
+            return Variable(
+                new_value, requires_grad=requires_grad, last_operation=last_operation,
+            )
 
     def __radd__(self, var):
         return self + var
 
     def __iadd__(self, var):
-        return self + var
+        return self.__add__(var, inplace=True)
 
-    def __sub__(self, var):
+    def __sub__(self, var, inplace=False):
         negative_var = var * (-1)
-        return self + negative_var
+        return self.__add__(negative_var, inplace=inplace)
 
     def __rsub__(self, var):
         negative_value = self * (-1)
         return negative_value + var
 
     def __isub__(self, var):
-        return self - var
+        return self.__sub__(var, inplace=True)
 
-    def __mul__(self, var):
+    def __mul__(self, var, inplace=False):
         new_value = self.value
         requires_grad = self.requires_grad
         if isinstance(var, Variable):
@@ -78,17 +87,25 @@ class Variable:
             raise Exception(f"Cannot multiply a {self.__class__} and a {type(var)}")
 
         last_operation = ProductOperator(self, var)
-        return Variable(
-            new_value, requires_grad=requires_grad, last_operation=last_operation,
-        )
+        if inplace:
+            self.value = new_value
+            self.grad = 0
+            self.requires_grad = False
+            self.last_operation = None
+            return self
+
+        else:
+            return Variable(
+                new_value, requires_grad=requires_grad, last_operation=last_operation,
+            )
 
     def __rmul__(self, var):
         return self * var
 
     def __imul__(self, var):
-        return self * var
+        return self.__mul__(var, inplace=True)
 
-    def __truediv__(self, var):
+    def __truediv__(self, var, inplace=False):
         new_value = self.value
         requires_grad = self.requires_grad
         if isinstance(var, Variable):
@@ -100,11 +117,20 @@ class Variable:
             raise Exception(f"Cannot divide a {self.__class__} by a {type(var)}")
 
         last_operation = DivisionOperator(self, var)
-        return Variable(
-            new_value, requires_grad=requires_grad, last_operation=last_operation,
-        )
 
-    def __rtruediv__(self, var):
+        if inplace:
+            self.value = new_value
+            self.grad = 0
+            self.requires_grad = False
+            self.last_operation = None
+            return self
+
+        else:
+            return Variable(
+                new_value, requires_grad=requires_grad, last_operation=last_operation,
+            )
+
+    def __rtruediv__(self, var, inplace=False):
         new_value = 0
         requires_grad = self.requires_grad
         if isinstance(var, Variable):
@@ -116,9 +142,20 @@ class Variable:
             raise Exception(f"Cannot divide a {type(var)} by a {self.__class__}")
 
         last_operation = DivisionOperator(var, self)
-        return Variable(
-            new_value, requires_grad=requires_grad, last_operation=last_operation,
-        )
+        if inplace:
+            self.value = new_value
+            self.grad = 0
+            self.requires_grad = False
+            self.last_operation = None
+            return self
+
+        else:
+            return Variable(
+                new_value, requires_grad=requires_grad, last_operation=last_operation,
+            )
+
+    def __itruediv__(self, var):
+        return self.__truediv__(var, inplace=True)
 
     def __floordiv__(self, var):
         raise Exception(r"The operation // is not implemented yet")

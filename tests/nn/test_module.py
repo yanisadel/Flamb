@@ -8,16 +8,15 @@ def test_module():
             super().__init__()
             self.layer = nn.Linear(10, 30)
             self.layer2 = nn.Linear(30, 50)
+            self.initialize_parameters()
 
-        def forward(self, x):
+        def __call__(self, x):
             x = self.layer(x)
             return self.layer2(x)
 
         
     x = flamb.ones((32, 10))
     model = Model()
-
-    assert (model.parameters is None), f"model.parameters should be None but is {model.parameters}"
     output = model(x)
 
     assert (output.shape == (32, 50)), f"Ouput shape should be (32, 50) but it is {output.shape}"

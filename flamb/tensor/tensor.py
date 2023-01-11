@@ -12,5 +12,5 @@ class Tensor(np.ndarray):
         else:
             res = 0
             for index in loop_on_indicies(shape):
-                res += self[index]
+                res = res + self[index]
             return res
