@@ -5,6 +5,7 @@ from copy import deepcopy
 l_ref = [[[1, 2, 3, 4], [5, 6, 7, 8]], [[9, 10, 11, 12], [13, 14, 15, 16]]]
 
 def test_shape():
+    """Test getting the shape of a tensor"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -12,6 +13,7 @@ def test_shape():
 
 
 def test_read_value():
+    """Test reading a value of a tensor"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -21,6 +23,7 @@ def test_read_value():
 
 
 def test_modify_value():
+    """Test modification of a value of a tensor"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -35,31 +38,8 @@ def test_modify_value():
     assert (l[0][1][2] == 50), f"l[0][1][2] should be have been modified to 50, but it is {l[0][1][2]}"
 
 
-def test_loop_on_indicies():
-    """
-    shape = (2, 2)
-    l = [index for index in Tensor._loop_on_indicies(shape)]
-
-    assert l == [(0, 0), (0, 1), (1, 0), (1, 1)], "The loop on indicies does not work"
-
-    shape = (2, 2, 2)
-    l = [index for index in Tensor._loop_on_indicies(shape)]
-
-    assert l == [
-        (0, 0, 0),
-        (0, 0, 1),
-        (0, 1, 0),
-        (0, 1, 1),
-        (1, 0, 0),
-        (1, 0, 1),
-        (1, 1, 0),
-        (1, 1, 1),
-    ], "The loop on indicies does not work"
-    """
-    pass
-
-
 def test_product_operator():
+    """Test the product of a tensor and a scalar"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -70,6 +50,7 @@ def test_product_operator():
 
 
 def test_sum_operator():
+    """Test sum between two tensors"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -80,6 +61,7 @@ def test_sum_operator():
 
 
 def test_sub_operator():
+    """Test substraction between two tensors"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
@@ -94,6 +76,7 @@ def test_sub_operator():
 
 
 def test_sum_method():
+    """Test sum method of a tensor"""
     global l_ref
     l = deepcopy(l_ref)
     l = flamb.to_tensor(l)
