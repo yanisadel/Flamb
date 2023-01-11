@@ -14,7 +14,6 @@ def test_module():
             x = self.layer(x)
             return self.layer2(x)
 
-        
     x = flamb.ones((32, 10))
     model = Model()
     output = model(x)
