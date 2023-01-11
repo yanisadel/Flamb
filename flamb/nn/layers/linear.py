@@ -12,9 +12,7 @@ class Linear(LayerBase):
     def forward(self, x):
         assert (x.shape[-1] == self.input_size), f"Input size of x should be {self.input_size}, but got {x.shape[-1]}"
         x = x.dot(self.weights)
-  
         x += self.bias
-
         return x
 
     def get_parameters(self):

@@ -5,7 +5,7 @@ class Module:
     def __init__(self):
         self.parameters = None
 
-    def __call__(self, x):
+    def __call__(self, x): # This way of initializing parameters may cause a problem if we want to define an optimizer on model parameters, before calling the model
         if self.parameters is None:
             self.initialize_parameters()
         

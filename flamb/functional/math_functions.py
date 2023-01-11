@@ -8,7 +8,7 @@ import numpy as np
 
 def exp(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(math.exp)(x)
+        return np.vectorize(lambda x: x.exp())(x) # ALERT: this may cause a problem if tensors contain non-variable values
     elif isinstance(x, flamb.Variable):
         return x.exp()
     else:
@@ -17,7 +17,7 @@ def exp(x):
 
 def cos(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(math.cos)(x)
+        return np.vectorize(lambda x: x.cos())(x)
     elif isinstance(x, flamb.Variable):
         return x.cos()
     else:
@@ -26,7 +26,7 @@ def cos(x):
 
 def sin(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(math.sin)(x)
+        return np.vectorize(lambda x: x.sin())(x)
     elif isinstance(x, flamb.Variable):
         return x.sin()
     else:
@@ -35,7 +35,7 @@ def sin(x):
 
 def tan(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(math.tan)(x)
+        return np.vectorize(lambda x: x.tan())(x)
     elif isinstance(x, flamb.Variable):
         return x.tan()
     else:
@@ -44,7 +44,7 @@ def tan(x):
 
 def tanh(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(math.tanh)(x)
+        return np.vectorize(lambda x: x.tanh())(x)
     elif isinstance(x, flamb.Variable):
         return x.tanh()
     else:
@@ -53,7 +53,7 @@ def tanh(x):
 
 def ReLU(x):
     if isinstance(x, flamb.Tensor):
-        return np.vectorize(lambda x: max(x, 0))(x)
+        return np.vectorize(lambda x: x.ReLU())(x)
     elif isinstance(x, flamb.Variable):
         return x.ReLU()
     else:

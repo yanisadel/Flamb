@@ -254,4 +254,10 @@ class Variable:
             raise Exception(
                 "Cannot compute gradient in because grad is disabled (you're probably in a flamb.no_grad context)"
             )
+    
+    def get_value(self):
+        return self.value
 
+    def reset_state(self):
+        self.grad = 0
+        self.last_operation = None
