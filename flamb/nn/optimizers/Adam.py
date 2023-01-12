@@ -21,5 +21,5 @@ class Adam(Optimizer):
             self.first_momentum = self.beta1 * self.first_momentum + (1 - self.beta1) * grads
             self.second_momentum = self.beta2 * self.second_momentum + (1 - self.beta2) * (grads.norm()**2)
             for i in range(self.nb_params):
-                self.params[i] -= self.learning_rate * self.first_momentum[i] / (self.second_momentum + self.eps)
+                self.params[i] -= self.learning_rate * self.first_momentum[i] / (self.second_momentum**(1/2) + self.eps)
                 self.params[i].reset_state(requires_grad=True)

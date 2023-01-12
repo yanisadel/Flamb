@@ -23,8 +23,8 @@ def test_value():
     loss.backward()
     optimizer.step()
     second_momentum_norm_sq = 8**2 + 4**2
-    new_x = 4 - learning_rate * (1 - beta1)*2*4 / ( (1 - beta2) * second_momentum_norm_sq + eps)
-    new_y = 2 - learning_rate * (1 - beta1)*2*2 / ( (1 - beta2) * second_momentum_norm_sq + eps)
+    new_x = 4 - learning_rate * (1 - beta1)*2*4 / ( ( (1 - beta2) * second_momentum_norm_sq ) ** (1/2) + eps)
+    new_y = 2 - learning_rate * (1 - beta1)*2*2 / ( ( (1 - beta2) * second_momentum_norm_sq ) ** (1/2) + eps)
     assert abs(x.value - new_x) < 1e-4 # < 1e-4 for approximation errors
     assert abs(y.value - new_y) < 1e-4
 
